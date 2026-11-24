@@ -34,6 +34,6 @@ void AurenEditor::refresh()
     view.setPads(std::move(pads)); auto selected=view.getPadGrid().getSelectedPad(); auto sm=processor.model().padFlat(selected).getSample(); if(sm) view.setSelectedPadAudio(selected,sm->name,drumTypeName(sm->type),mono(sm->isolated),1,1);
 }
 void AurenEditor::timerCallback(){ auto expected=processor.parameters().getRawParameterValue(ids::skin)->load()>.5f?ui::Skin::dark:ui::Skin::light; if(view.getSkin()!=expected)view.setSkin(expected); }
-void AurenEditor::chooseSource(){ chooser=std::make_unique<juce::FileChooser>("Load source",{},"*.wav;*.aif;*.aiff;*.flac;*.mp3"); chooser->launchAsync(juce::FileBrowserComponent::openMode|juce::FileBrowserComponent::canSelectFiles,[this](const juce::FileChooser& c){auto f=c.getResult();if(f.existsAsFile()){processor.loadSource(f);refresh();}}); }
+void AurenEditor::chooseSource(){ chooser=std::make_unique<juce::FileChooser>("Load source", juce::File {}, "*.wav;*.aif;*.aiff;*.flac;*.mp3"); chooser->launchAsync(juce::FileBrowserComponent::openMode|juce::FileBrowserComponent::canSelectFiles,[this](const juce::FileChooser& c){auto f=c.getResult();if(f.existsAsFile()){processor.loadSource(f);refresh();}}); }
 void AurenEditor::choosePad(){ chooseSource(); }
 } // namespace auren

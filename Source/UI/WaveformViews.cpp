@@ -73,7 +73,13 @@ void SourceWaveformView::setAudio (std::vector<float> data) { const juce::Scoped
 void SourceWaveformView::setMarkers (std::vector<HitMarker> data) { const juce::ScopedLock lock (dataLock); markers = std::move (data); repaint(); }
 void SourceWaveformView::setFamilyCounts (std::vector<FamilyCount> data) { counts = std::move (data); repaint(); }
 void SourceWaveformView::setMetadata (juce::String file, juce::String time, int hits) { fileName = std::move (file); duration = std::move (time); totalHits = hits; repaint(); }
-void SourceWaveformView::setVisibleRange (juce::Range<float> range) { visibleRange = range.constrainedWithin ({ 0.0f, 1.0f }); repaint(); }
+void SourceWaveformView::setVisibleRange (juce::Range<float> range)
+{
+    const auto length = juce::jlimit (0.01f, 1.0f, range.getLength());
+    const auto start = juce::jlimit (0.0f, 1.0f - length, range.getStart());
+    visibleRange = { start, start + length };
+    repaint();
+}
 
 void SourceWaveformView::paint (juce::Graphics& g)
 {

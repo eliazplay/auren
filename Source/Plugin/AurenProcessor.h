@@ -1,6 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "../AurenConstants.h"
 #include "../Assistant/AurenAssistant.h"
 #include "../DSP/CleanHitExtractor.h"
 #include "../DSP/DrumAnalysis.h"
