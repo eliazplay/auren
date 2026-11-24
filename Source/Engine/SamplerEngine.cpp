@@ -1,5 +1,8 @@
 #include "SamplerEngine.h"
 
+#include <algorithm>
+#include <cmath>
+
 namespace auren
 {
 void SamplerEngine::OnePole::set (double sampleRate, float hp, float lp) noexcept

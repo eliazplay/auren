@@ -1,5 +1,7 @@
 #include "AurenEditor.h"
 
+#include <map>
+
 namespace auren
 {
 AurenEditor::AurenEditor (::AurenProcessor& p) : AudioProcessorEditor (&p), processor (p)

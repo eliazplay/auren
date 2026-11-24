@@ -1,6 +1,8 @@
 #include "AurenProcessor.h"
 #include "AurenEditor.h"
 
+#include <map>
+
 AurenProcessor::AurenProcessor()
  : AudioProcessor (BusesProperties().withOutput ("Main", juce::AudioChannelSet::stereo(), true)),
    apvts (*this, nullptr, "AUREN", createLayout())
