@@ -1,0 +1,35 @@
+# CMake / IDE output
+/build/
+/.tools/
+/cmake-build-*/
+/out/
+/.cache/
+/.vs/
+/.vscode/
+/.idea/
+CMakeUserPresets.json
+compile_commands.json
+
+# Generated plugin artifacts
+*.vst3
+*.component
+*.aaxplugin
+*.exe
+*.dll
+*.pdb
+*.ilk
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local audio and model data
+/Audio/
+/Models/
+*.wav
+*.aiff
+*.flac
+*.mp3
+*.onnx
+

@@ -1,0 +1,61 @@
+name: Build Windows VST3
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Windows Release
+    runs-on: windows-2022
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Configure
+        shell: pwsh
+        run: >-
+          cmake -S . -B build -A x64
+          -DAUREN_BUILD_STANDALONE=ON
+
+      - name: Build VST3 and standalone
+        shell: pwsh
+        run: cmake --build build --config Release --target AUREN_VST3 AUREN_Standalone --parallel 2
+
+      - name: Stage artifacts
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path artifact | Out-Null
+
+          $vst3 = Get-ChildItem -Path build -Filter AUREN.vst3 -Recurse |
+            Select-Object -First 1
+          if (-not $vst3) { throw "AUREN.vst3 was not produced" }
+          Copy-Item -Path $vst3.FullName -Destination artifact/AUREN.vst3 -Recurse
+
+          $standalone = Get-ChildItem -Path build -Filter AUREN.exe -Recurse |
+            Where-Object { $_.FullName -match "Standalone" } |
+            Select-Object -First 1
+          if (-not $standalone) { throw "AUREN.exe was not produced" }
+          Copy-Item -Path $standalone.FullName -Destination artifact/AUREN.exe
+
+      - name: Upload Windows build
+        uses: actions/upload-artifact@v4
+        with:
+          name: AUREN-Windows-${{ github.sha }}
+          path: artifact
+          if-no-files-found: error
+          compression-level: 9
+
